@@ -1,0 +1,7 @@
+wheel
+python-docx
+nltk
+
+telegram
+python-telegram-bot
+
