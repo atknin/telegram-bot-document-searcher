@@ -4,7 +4,14 @@ from typing import List
 
 class DocumentSearcher():
     """
-    Searches words from user_input in files in documents_dir
+    Searches words from the user_input in files in the documents_dir
+    
+    Args:
+        documents_dir (str): a directory where are the files to search
+        user_input (List[str]): list of the words a user typed
+
+    Returns:
+        List[str]: list of the filenames to return to the user
     
     """
     def __init__(self,
