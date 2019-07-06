@@ -3,6 +3,8 @@ import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
+import document_searcher
+
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                      level=logging.INFO)
 
@@ -25,6 +27,18 @@ dispatcher.add_handler(start_handler)
 
 echo_handler = MessageHandler(Filters.text, echo)
 dispatcher.add_handler(echo_handler)
+
+def search(update, context):
+    print('search')
+    context.bot.send_message(chat_id=update.message.chat_id, 
+                         text='Стартую поиск...')
+    ds = DocumentSearcher()
+    for progress in ds.search():
+        context.bot.send_message(chat_id=update.message.chat_id, 
+                         text=f"Выполнено: {progress}%")
+    context.bot.send_message(chat_id=update.message.chat_id, 
+                         text='Поиск закончен !')
+        
 
 def caps(update, context):
     text_caps = ' '.join(context.args).upper()

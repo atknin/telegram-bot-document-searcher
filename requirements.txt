@@ -2,6 +2,12 @@ wheel
 python-docx
 nltk
 
+pytesseract
+tesseract
+tesseract-ocr
+
+pillow
+
 telegram
 python-telegram-bot
 

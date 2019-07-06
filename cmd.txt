@@ -1,0 +1,2 @@
+docker run --rm -d -v `pwd`/documents:/documents -v `pwd`/requirements.txt:/requirements.txt -v `pwd`/document-searcher.py:/document-searcher.py -v `pwd`/first.py:/first.py python:3.7-alpine
+
