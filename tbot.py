@@ -58,11 +58,8 @@ def main():
 
     start_handler = CommandHandler('start', start)
     dispatcher.add_handler(start_handler)
-    
-    echo_handler = MessageHandler(Filters.text, search)
-    dispatcher.add_handler(echo_handler)
-    
-    dispatcher.add_handler(MessageHandler(Filters.text, echo))
+
+    dispatcher.add_handler(MessageHandler(Filters.text, search))
     dispatcher.add_error_handler(error)
 
     updater.start_polling()

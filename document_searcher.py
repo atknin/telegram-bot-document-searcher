@@ -124,7 +124,7 @@ class DocumentsSearcher:
             if counter > progress_stage:
                 progress_stage = progress_stage + progress_slice
                 yield int(counter / files_count * 100) 
-            if counter > 3: return
+#            if counter > 3: return
 
         
 def main():
