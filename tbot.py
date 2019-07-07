@@ -4,7 +4,7 @@ import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
-from document_searcher import DocumentSearcher
+from document_searcher import DocumentsSearcher
 
 logging.basicConfig(filename='tbot.log',
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -31,7 +31,7 @@ def search(update, context):
     print('search')
     bot.send_message(chat_id=id, 
                          text='Начинаю поиск...')
-    ds = DocumentSearcher()
+    ds = DocumentsSearcher(user_input=update.message.text.split())
     print(f'ds: {ds}')
     for progress in ds.search():
         bot.send_message(chat_id=id, text=f"Выполнено: {progress}%")
@@ -48,6 +48,7 @@ def error(update, context):
 
 def main():
     '''Start the bot.'''
+    logger.info('Start')
     token = os.environ['TOKEN']
 
     updater = Updater(token=token, use_context=True)
@@ -58,13 +59,12 @@ def main():
     
     dispatcher.add_handler(CommandHandler('search', search))
     
-    echo_handler = MessageHandler(Filters.text, echo)
+    echo_handler = MessageHandler(Filters.text, search)
     dispatcher.add_handler(echo_handler)
     
     dispatcher.add_handler(MessageHandler(Filters.text, echo))
     dispatcher.add_error_handler(error)
 
-    print('Starting')
     updater.start_polling()
     updater.idle()
         
