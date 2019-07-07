@@ -10,8 +10,10 @@ import document_searcher
 logging.basicConfig(filename='tbot.log',
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 token = os.environ['TOKEN']
+
 updater = Updater(token=token, use_context=True)
 
 dispatcher = updater.dispatcher
