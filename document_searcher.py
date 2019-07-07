@@ -28,6 +28,7 @@ class FindInFile(object):
     def __init__(self, file_path: str, keyword_list: List[str] = []):
         self.file_path = file_path
         self.keyword_list = keyword_list
+        
     def get_content(self):
         pass
     
@@ -41,7 +42,7 @@ class FindInFile(object):
         else:
             content = self.get_content().lower()
 
-        logger.info(f"Content: {content}")
+        logger.info(f"Content:\n{content}\n")
         if not content: return False
         # create cache file
         if not isfile(cache_file):
@@ -62,7 +63,7 @@ class FindInImage(FindInFile):
                        Image.open(self.file_path), 
                        lang='rus')
         except Exception as e:
-            logger.info(f"Can't extract text from {self.file_path}")
+            logger.info(f"Can't OCR {self.file_path}")
             content = ''
         return content
         
@@ -92,7 +93,6 @@ class DocumentsSearcher:
         self.documents_dir = documents_dir
         self.keyword_list = keyword_list
         self.result_list = []
-        print(f"{documents_dir} {keyword_list}")
         
     def search(self):
         '''
@@ -101,16 +101,15 @@ class DocumentsSearcher:
         Yields:
             int: progress value
         '''
-
-        logger.info(f"_______________Walker")
+        logger.info('Search started')
         files_list = [join(self.documents_dir, f) for f in listdir(self.documents_dir) 
                       if isfile(join(self.documents_dir, f))]
         files_count = len(files_list)
         progress_stage = progress_slice = int(files_count / PROGRESS_INTERVALS)
-        logger.info(f"Counters: files {files_count}, ps {progress_stage} ")
+        logger.info(f"Counters: files {files_count}, progress_slice {progress_stage} ")
         for counter, f in enumerate(files_list):
             result = None
-            logger.info(f"____________{counter}, processing {f}")
+            logger.info(f"{counter}, processing {f}")
             file_extension = f.split('.')[-1]
             if file_extension in IMAGES:
                 result = FindInImage(f, self.keyword_list).find()
