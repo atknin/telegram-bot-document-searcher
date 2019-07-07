@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import os
 import logging
 
@@ -31,20 +30,24 @@ def search(update, context):
     id = update.message.chat_id
     print('search')
     bot.send_message(chat_id=id, 
-                         text='Стартую поиск...')
+                         text='Начинаю поиск...')
     ds = DocumentSearcher()
     print(f'ds: {ds}')
     for progress in ds.search():
         bot.send_message(chat_id=id, text=f"Выполнено: {progress}%")
-    bot.send_message(chat_id=id, text='Поиск закончен !')
-    bot.send_document(chat_id=id, document=open('venv/pyvenv.cfg', 'rb'))
+    if ds.result_list:
+        bot.send_message(chat_id=id, text='Поиск закончен, ваши файлы:')
+        for d in ds.result_list:
+            bot.send_document(chat_id=id, document=open(d, 'rb'))
+    else:
+        bot.send_message(chat_id=id, text='Поиск закончен, ничего не найдено :-(')
 
 def error(update, context):
-    """Log Errors caused by Updates."""
+    '''Log Errors caused by Updates.'''
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 def main():
-    """Start the bot."""
+    '''Start the bot.'''
     token = os.environ['TOKEN']
 
     updater = Updater(token=token, use_context=True)
