@@ -3,4 +3,5 @@ documents/*
 __pycache__/*
 
 tbot.log
+cache/*
 

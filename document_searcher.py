@@ -8,6 +8,7 @@ import logging
 from PIL import Image
 import pytesseract
 
+
 IMAGES = 'jpg', 'jpeg', 'png'
 DOCX = 'docx'
 
@@ -31,16 +32,30 @@ class FindInFile(object):
         pass
     
     def find(self) -> bool:
-        content = self.get_content()
+        # before using specific method to extract content
+        # first try to check cache
+        cache_file = 'cache/' + self.file_path.split('/')[-1] + '.txt'
+        if isfile(cache_file):
+            with open(cache_file, 'r') as cf:
+              content = cf.read()
+        else:
+            content = self.get_content().lower()
+
         logger.info(f"Content: {content}")
         if not content: return False
+        # create cache file
+        if not isfile(cache_file):
+            with open(cache_file, 'w') as cf:
+              cf.write(content)        
+        
         for word in self.keyword_list:
             if word not in content:
                 return False
-        logger.info(f"File {file_path} includes all keywords")
+        logger.info(f"File {self.file_path} includes all keywords")
         return True
 
 class FindInImage(FindInFile):
+    ''' Uses Tesseract to OCR text from image file '''
     def get_content(self) -> str:
         try:
             content = pytesseract.image_to_string(
@@ -52,6 +67,7 @@ class FindInImage(FindInFile):
         return content
         
 class FindInDocx(FindInFile):
+    ''' For now this class is just a stub '''
     def __init__(self, file_path: str, keyword_list = List[str]):
         super.__init__(file_path, keyword_list = [])
     
@@ -63,20 +79,20 @@ class DocumentsSearcher:
     Searches words from the user_input in the files in the documents_dir
     
     Args:
-        documents_dir (str): a directory where are the files to search
-        user_input (List[str]): list of the words a user typed
+        documents_dir (str): a directory where the files to search are
+        keyword_list (List[str]): list of the words user provided
 
     Returns:
         List[str]: list of the filenames to return to the user
     
     '''
     def __init__(self,
-                 documents_dir: str ='documents', 
-                 user_input: List[str] = []) -> List[str]:
+                 documents_dir: str='documents', 
+                 keyword_list: List[str]=[]) -> List[str]:
         self.documents_dir = documents_dir
-        self.user_input = user_input
+        self.keyword_list = keyword_list
         self.result_list = []
-        print(f"{documents_dir} {user_input}")
+        print(f"{documents_dir} {keyword_list}")
         
     def search(self):
         '''
@@ -97,9 +113,9 @@ class DocumentsSearcher:
             logger.info(f"____________{counter}, processing {f}")
             file_extension = f.split('.')[-1]
             if file_extension in IMAGES:
-                result = FindInImage(f, self.user_input).find()
+                result = FindInImage(f, self.keyword_list).find()
             elif file_extension in DOCX:
-                result = FindInDocx(f, self.user_input).find()
+                result = FindInDocx(f, self.keyword_list).find()
             else:
                 logger.info(f"file: {f} is not supported")
             if result:
@@ -113,7 +129,7 @@ class DocumentsSearcher:
 
         
 def main():
-    ds = DocumentSearcher()
+    pass
 
 if __name__ == "__main__":
     main()

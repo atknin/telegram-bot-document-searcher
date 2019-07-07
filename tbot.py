@@ -3,6 +3,7 @@ import os
 import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from nltk.stem.snowball import SnowballStemmer
 
 from document_searcher import DocumentsSearcher
 
@@ -28,11 +29,14 @@ def echo(update, context):
 def search(update, context):
     bot = context.bot
     id = update.message.chat_id
-    print('search')
+                         
+    stemmer = SnowballStemmer("russian")
+    keyword_list = [stemmer.stem(w).lower() for w in update.message.text.split()]
+    
     bot.send_message(chat_id=id, 
-                         text='Начинаю поиск...')
-    ds = DocumentsSearcher(user_input=update.message.text.split())
-    print(f'ds: {ds}')
+                     text=f"Начинаю поиск по словам: {keyword_list}")
+    
+    ds = DocumentsSearcher(keyword_list=keyword_list)
     for progress in ds.search():
         bot.send_message(chat_id=id, text=f"Выполнено: {progress}%")
     if ds.result_list:
