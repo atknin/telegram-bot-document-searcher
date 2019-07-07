@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import logging
 
@@ -5,8 +7,9 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 import document_searcher
 
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                     level=logging.INFO)
+logging.basicConfig(filename='tbot.log',
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO)
 
 token = os.environ['TOKEN']
 updater = Updater(token=token, use_context=True)
@@ -47,6 +50,7 @@ def caps(update, context):
 caps_handler = CommandHandler('caps', caps)
 dispatcher.add_handler(caps_handler)
 
+print('Starting')
 updater.start_polling()
 updater.idle()
 
