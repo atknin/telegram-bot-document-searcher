@@ -4,7 +4,7 @@ from typing import List
 
 class DocumentSearcher():
     '''
-    Searches words from the user_input in files in the documents_dir
+    Searches words from the user_input in the files in the documents_dir
     
     Args:
         documents_dir (str): a directory where are the files to search
@@ -19,16 +19,18 @@ class DocumentSearcher():
                  user_input: List[str] = []) -> List[str]:
         print(f"{documents_dir} {user_input}")
         
-    def search():
+    def search(self):
         '''
         Generator - searches keywords in documents and yields progress values
         
         Yields:
             int: progress value
         '''
-        for i in range(10):
-            sleep(5)
-            yield i * 10
+        print('search method')
+        for i in range(2):
+            sleep(2)
+            print(f'Yielding value {i}')
+            yield (i + 1) * 33
         
 def main():
     ds = DocumentSearcher()

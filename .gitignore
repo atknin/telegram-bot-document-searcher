@@ -2,3 +2,5 @@ venv/*
 documents/*
 __pycache__/*
 
+tbot.log
+

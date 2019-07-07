@@ -5,56 +5,68 @@ import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
-import document_searcher
+from document_searcher import DocumentSearcher
 
 logging.basicConfig(filename='tbot.log',
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-token = os.environ['TOKEN']
-
-updater = Updater(token=token, use_context=True)
-
-dispatcher = updater.dispatcher
-
 def start(update, context):
-    print(update.message.chat_id)
+    id = update.message.chat_id
+    user = update.message.from_user
+    user = update.effective_user.id
+    logger.info(f"/start: {user}")
+    print(f"/start: {user}")
     context.bot.send_message(chat_id=update.message.chat_id, 
-                             text="I'm a bot, please talk to me!")
-                             
+                             text='Введите одно или несколько '
+                              'слов для поиска (через пробел).')
+
 def echo(update, context):
     context.bot.send_message(chat_id=update.message.chat_id, 
                              text=update.message.text)
-                             
-start_handler = CommandHandler('start', start)
-dispatcher.add_handler(start_handler)
-
-echo_handler = MessageHandler(Filters.text, echo)
-dispatcher.add_handler(echo_handler)
 
 def search(update, context):
+    bot = context.bot
+    id = update.message.chat_id
     print('search')
-    context.bot.send_message(chat_id=update.message.chat_id, 
+    bot.send_message(chat_id=id, 
                          text='Стартую поиск...')
     ds = DocumentSearcher()
+    print(f'ds: {ds}')
     for progress in ds.search():
-        context.bot.send_message(chat_id=update.message.chat_id, 
-                         text=f"Выполнено: {progress}%")
-    context.bot.send_message(chat_id=update.message.chat_id, 
-                         text='Поиск закончен !')
+        bot.send_message(chat_id=id, text=f"Выполнено: {progress}%")
+    bot.send_message(chat_id=id, text='Поиск закончен !')
+    bot.send_document(chat_id=id, document=open('venv/pyvenv.cfg', 'rb'))
+
+def error(update, context):
+    """Log Errors caused by Updates."""
+    logger.warning('Update "%s" caused error "%s"', update, context.error)
+
+def main():
+    """Start the bot."""
+    token = os.environ['TOKEN']
+
+    updater = Updater(token=token, use_context=True)
+    dispatcher = updater.dispatcher
+
+    start_handler = CommandHandler('start', start)
+    dispatcher.add_handler(start_handler)
+    
+    dispatcher.add_handler(CommandHandler('search', search))
+    
+    echo_handler = MessageHandler(Filters.text, echo)
+    dispatcher.add_handler(echo_handler)
+    
+    dispatcher.add_handler(MessageHandler(Filters.text, echo))
+    dispatcher.add_error_handler(error)
+
+    print('Starting')
+    updater.start_polling()
+    updater.idle()
         
-
-def caps(update, context):
-    text_caps = ' '.join(context.args).upper()
-    context.bot.send_message(chat_id=update.message.chat_id, text=text_caps)
-
-caps_handler = CommandHandler('caps', caps)
-dispatcher.add_handler(caps_handler)
-
-print('Starting')
-updater.start_polling()
-updater.idle()
+if __name__ == '__main__':
+    main()
 
 
 
