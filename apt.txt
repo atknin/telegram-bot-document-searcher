@@ -1,2 +1,5 @@
-apt-get install python3-dev libleptonica-dev libtesseract-dev tesseract-ocr
-
+apt-get install -y python3-dev \
+                   libleptonica-dev \
+                   libtesseract-dev \
+                   tesseract-ocr \
+                   build-essential
