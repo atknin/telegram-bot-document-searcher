@@ -3,3 +3,6 @@ apt-get install -y python3-dev \
                    libtesseract-dev \
                    tesseract-ocr \
                    build-essential
+
+wget -O /usr/share/tesseract-ocr/4.00/tessdata/rus.traineddata \
+        https://github.com/tesseract-ocr/tessdata/raw/master/rus.traineddata
