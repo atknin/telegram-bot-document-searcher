@@ -65,6 +65,7 @@ class FindInImage(FindInFile):
         except Exception as e:
             logger.info("Can't OCR {}".format(self.file_path))
             content = ''
+            print(e)
         return content
         
 class FindInDocx(FindInFile):
