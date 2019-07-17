@@ -66,6 +66,7 @@ class FindInImage(FindInFile):
             logger.info("Can't OCR {}".format(self.file_path))
             content = ''
             print(e)
+        print(content)
         return content
         
 class FindInDocx(FindInFile):
