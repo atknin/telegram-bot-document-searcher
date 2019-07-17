@@ -33,11 +33,11 @@ def search(update, context):
     keyword_list = [stemmer.stem(w).lower() for w in update.message.text.split()]
     
     bot.send_message(chat_id=id, 
-                     text=f"Начинаю поиск по словам: {keyword_list}")
+                     text="Начинаю поиск по словам: {}".format(keyword_list))
     
     ds = DocumentsSearcher(keyword_list=keyword_list)
     for progress in ds.search():
-        bot.send_message(chat_id=id, text=f"Выполнено: {progress}%")
+        bot.send_message(chat_id=id, text="Выполнено: {}%".format(progress))
     if ds.result_list:
         bot.send_message(chat_id=id, text='Поиск закончен, ваши файлы:')
         for d in ds.result_list:

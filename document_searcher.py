@@ -42,7 +42,7 @@ class FindInFile(object):
         else:
             content = self.get_content().lower()
 
-        logger.info(f"Content:\n{content}\n")
+        logger.info("Content:\n{}\n".format(content))
         if not content: return False
         # create cache file
         if not isfile(cache_file):
@@ -52,7 +52,7 @@ class FindInFile(object):
         for word in self.keyword_list:
             if word not in content:
                 return False
-        logger.info(f"File {self.file_path} includes all keywords")
+        logger.info("File {} includes all keywords".format(self.file_path))
         return True
 
 class FindInImage(FindInFile):
@@ -63,7 +63,7 @@ class FindInImage(FindInFile):
                        Image.open(self.file_path), 
                        lang='rus')
         except Exception as e:
-            logger.info(f"Can't OCR {self.file_path}")
+            logger.info("Can't OCR {}".format(self.file_path))
             content = ''
         return content
         
@@ -106,17 +106,17 @@ class DocumentsSearcher:
                       if isfile(join(self.documents_dir, f))]
         files_count = len(files_list)
         progress_stage = progress_slice = int(files_count / PROGRESS_INTERVALS)
-        logger.info(f"Counters: files {files_count}, progress_slice {progress_stage} ")
+        logger.info("Counters: files {}, progress_slice {} ".format(files_count,progress_stage))
         for counter, f in enumerate(files_list):
             result = None
-            logger.info(f"{counter}, processing {f}")
+            logger.info("{}, processing {}".format(counter,f))
             file_extension = f.split('.')[-1]
             if file_extension in IMAGES:
                 result = FindInImage(f, self.keyword_list).find()
             elif file_extension in DOCX:
                 result = FindInDocx(f, self.keyword_list).find()
             else:
-                logger.info(f"file: {f} is not supported")
+                logger.info("file: {} is not supported".format(f))
             if result:
                 self.result_list.append(f)
             
