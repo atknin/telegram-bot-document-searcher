@@ -51,7 +51,7 @@ def error(update, context):
 
 def main():
     logger.info('Start')
-    token = os.environ['TOKEN']
+    token = '974931890:AAHh3S9scYVl7AxvahSIFBJCv2umeJNYT3k'
 
     updater = Updater(token=token, use_context=True)
     dispatcher = updater.dispatcher
