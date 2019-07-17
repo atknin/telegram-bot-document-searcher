@@ -105,6 +105,7 @@ class DocumentsSearcher:
         files_list = [join(self.documents_dir, f) for f in listdir(self.documents_dir) 
                       if isfile(join(self.documents_dir, f))]
         files_count = len(files_list)
+        print(files_count)
         progress_stage = progress_slice = int(files_count / PROGRESS_INTERVALS)
         logger.info("Counters: files {}, progress_slice {} ".format(files_count,progress_stage))
         for counter, f in enumerate(files_list):
