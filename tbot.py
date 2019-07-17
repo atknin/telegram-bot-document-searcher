@@ -16,7 +16,7 @@ def start(update, context):
     id = update.message.chat_id
     user = update.message.from_user
     user = update.effective_user.id
-    logger.info(f"/start: {user}")
+    # logger.info(f"/start: {user}")
     context.bot.send_message(chat_id=update.message.chat_id, 
                              text='Введите одно или несколько '
                               'слов для поиска (через пробел).')
